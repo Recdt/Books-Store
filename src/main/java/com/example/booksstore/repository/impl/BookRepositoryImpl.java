@@ -1,5 +1,6 @@
 package com.example.booksstore.repository.impl;
 
+import com.example.booksstore.exceptions.EntityNotFoundException;
 import com.example.booksstore.models.Book;
 import com.example.booksstore.repository.BookRepository;
 import jakarta.persistence.EntityManager;
@@ -30,7 +31,30 @@ public class BookRepositoryImpl implements BookRepository {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException("Can't save book " + book.getTitle());
+            throw new EntityNotFoundException("Can't save book " + book.getTitle(), e);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+
+    @Override
+    public Book getById(Long id) {
+        EntityManager entityManager = null;
+        EntityTransaction transaction = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            Book book = entityManager.find(Book.class, id);
+            transaction.commit();
+            return book;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new EntityNotFoundException("Can't get book by id:" + id, e);
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -55,7 +79,7 @@ public class BookRepositoryImpl implements BookRepository {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException("Can't get all books from DB");
+            throw new EntityNotFoundException("Can't get all books from DB", e);
         } finally {
             if (entityManager != null) {
                 entityManager.close();
