@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -40,7 +41,7 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public Book getById(Long id) {
+    public Optional<Book> findById(Long id) {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
         try {
@@ -49,7 +50,7 @@ public class BookRepositoryImpl implements BookRepository {
             transaction.begin();
             Book book = entityManager.find(Book.class, id);
             transaction.commit();
-            return book;
+            return Optional.of(book);
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
