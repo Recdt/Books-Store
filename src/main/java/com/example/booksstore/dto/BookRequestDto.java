@@ -1,12 +1,10 @@
 package com.example.booksstore.dto;
 
 import java.math.BigDecimal;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-public class CreateBookRequestDto {
+@Data
+public class BookRequestDto {
     private String title;
     private String author;
     private String isbn;
