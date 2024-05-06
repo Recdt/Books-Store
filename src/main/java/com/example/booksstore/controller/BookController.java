@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookController {
     private final BookService bookService;
 
-    @Operation(summary = "Get all books in shop",
+    @Operation(summary = "Get needed count of books from the shop",
             description = "Get a list of all available books")
     @GetMapping
     public List<BookDto> getAll(Pageable pageable) {
@@ -53,7 +53,7 @@ public class BookController {
         return bookService.updateById(id, bookDto);
     }
 
-    @Operation(summary = "Deletes a book", description = "Deletes a book by ID(soft delete)")
+    @Operation(summary = "Deletes a book", description = "Deletes a book by ID")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteBookById(@PathVariable Long id) {
