@@ -3,6 +3,7 @@ package com.example.booksstore.service.impl;
 import com.example.booksstore.dto.BookDto;
 import com.example.booksstore.dto.BookRequestDto;
 import com.example.booksstore.exceptions.EntityNotFoundException;
+import com.example.booksstore.exceptions.IsbnAlreadyExistsException;
 import com.example.booksstore.mappers.BookMapper;
 import com.example.booksstore.models.Book;
 import com.example.booksstore.repository.BookRepository;
@@ -19,6 +20,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto save(BookRequestDto book) {
+        checkIsbnUniqueness(book.getIsbn());
         Book model = bookMapper.toModel(book);
         return bookMapper.toDto(bookRepository.save(model));
     }
@@ -40,6 +42,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto updateById(Long id, BookRequestDto book) {
         checkBookAvailability(id);
+        checkUniqueIsbnForUpdate(book.getIsbn(), id);
         Book updatedBook = bookMapper.toModel(book);
         updatedBook.setId(id);
         return bookMapper.toDto(bookRepository.save(updatedBook));
@@ -54,6 +57,18 @@ public class BookServiceImpl implements BookService {
     private void checkBookAvailability(Long id) {
         if (!bookRepository.existsById(id)) {
             throw new EntityNotFoundException("Can't find book by id " + id);
+        }
+    }
+
+    private void checkIsbnUniqueness(String isbn) {
+        if (bookRepository.existsByIsbn(isbn)) {
+            throw new IsbnAlreadyExistsException("The isbn: " + isbn + " must be uniq.");
+        }
+    }
+
+    private void checkUniqueIsbnForUpdate(String isbn, Long id) {
+        if (bookRepository.existsByIsbnAndIdNot(isbn, id)) {
+            throw new IsbnAlreadyExistsException("The isbn: " + isbn + " must be uniq.");
         }
     }
 }
