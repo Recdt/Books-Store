@@ -47,9 +47,7 @@ public class BookController {
         return bookService.save(bookDto);
     }
 
-    @Operation(summary = "Updates a book", description = "Updates a book by ID. "
-            + "Accepts a BookRequestDto from request."
-            + " The ISBN in request must be unique and contain 13 characters")
+    @Operation(summary = "Updates a book", description = "Updates a book by ID.")
     @PutMapping("/{id}")
     public BookDto updateBook(@PathVariable Long id, @RequestBody @Valid BookRequestDto bookDto) {
         return bookService.updateById(id, bookDto);
