@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookController {
     private final BookService bookService;
 
-    @Operation(summary = "Get needed count of books from the shop",
+    @Operation(summary = "Returns a page of books",
             description = "Get a list of all available books")
     @GetMapping
     public List<BookDto> getAll(Pageable pageable) {
@@ -47,13 +47,15 @@ public class BookController {
         return bookService.save(bookDto);
     }
 
-    @Operation(summary = "Updates a book", description = "Updates a book by ID")
+    @Operation(summary = "Updates a book", description = "Updates a book by ID. "
+            + "Accepts a BookRequestDto from request."
+            + " The ISBN in request must be unique and contain 13 characters")
     @PutMapping("/{id}")
     public BookDto updateBook(@PathVariable Long id, @RequestBody @Valid BookRequestDto bookDto) {
         return bookService.updateById(id, bookDto);
     }
 
-    @Operation(summary = "Deletes a book", description = "Deletes a book by ID")
+    @Operation(summary = "Deletes the book", description = "Deletes the book by ID")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteBookById(@PathVariable Long id) {
