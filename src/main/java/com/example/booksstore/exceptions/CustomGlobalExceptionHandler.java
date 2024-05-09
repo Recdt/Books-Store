@@ -49,7 +49,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     @ExceptionHandler(RegistrationException.class)
-    public ResponseEntity<Object> handleEntityNotFoundException(RegistrationException exception) {
+    public ResponseEntity<Object> handleRegistrationException(RegistrationException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 }
