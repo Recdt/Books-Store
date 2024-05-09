@@ -1,6 +1,7 @@
 package com.example.booksstore;
 
 import com.example.booksstore.service.BookService;
+import com.example.booksstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,6 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BooksStoreApplication {
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private UserService userService;
 
     public static void main(String[] args) {
         SpringApplication.run(BooksStoreApplication.class, args);
