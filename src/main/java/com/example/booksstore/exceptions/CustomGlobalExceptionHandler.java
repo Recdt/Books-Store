@@ -53,9 +53,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(IsbnAlreadyExistsException.class)
-    public ResponseEntity<Object> handleIsbnAlreadyExistsException(
-            IsbnAlreadyExistsException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    @ExceptionHandler({RegistrationException.class, IsbnAlreadyExistsException.class})
+    public ResponseEntity<Object> handleBadRequestExceptions(Exception exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
