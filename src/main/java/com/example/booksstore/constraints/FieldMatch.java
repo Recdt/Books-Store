@@ -12,6 +12,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FieldMatch {
     String message() default "passed fields do not match";
+    String first();
+    String second();
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
