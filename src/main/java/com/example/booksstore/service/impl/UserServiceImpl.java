@@ -11,7 +11,6 @@ import com.example.booksstore.repository.RoleRepository;
 import com.example.booksstore.repository.UserRepository;
 import com.example.booksstore.service.UserService;
 import java.util.Collections;
-import java.util.HashSet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
