@@ -1,7 +1,7 @@
 package com.example.booksstore.controller;
 
-import com.example.booksstore.dto.UserRegistrationRequestDto;
-import com.example.booksstore.dto.UserResponseDto;
+import com.example.booksstore.dto.registration.UserRegistrationRequestDto;
+import com.example.booksstore.dto.registration.UserResponseDto;
 import com.example.booksstore.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
