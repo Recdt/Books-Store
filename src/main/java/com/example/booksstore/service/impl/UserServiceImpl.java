@@ -11,7 +11,6 @@ import com.example.booksstore.repository.RoleRepository;
 import com.example.booksstore.repository.UserRepository;
 import com.example.booksstore.service.UserService;
 import java.util.Collections;
-import java.util.HashSet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,13 +28,13 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RegistrationException("User with this email " + user.getEmail() + " exists.");
         }
-        Role role = roleRepository.getRoleByName(Role.RoleName.USER)
+        Role defaultRole = roleRepository.getRoleByName(Role.RoleName.USER)
                 .orElseThrow(() -> new NonExistentRoleException("Role "
                         + Role.RoleName.USER
                         + " is not exists."));
         User model = userMapper.toModel(user);
         model.setPassword(passwordEncoder.encode(model.getPassword()));
-        model.setRoles(new HashSet<>(Collections.singletonList(role)));
+        model.setRoles(Collections.singleton(defaultRole));
         return userMapper.toResponseDto(userRepository.save(model));
     }
 }
