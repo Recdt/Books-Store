@@ -25,4 +25,3 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new UserLoginResponseDto(token);
     }
 }
-
