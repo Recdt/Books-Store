@@ -12,6 +12,7 @@ import com.example.booksstore.repository.UserRepository;
 import com.example.booksstore.service.UserService;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto user) {
@@ -31,6 +33,7 @@ public class UserServiceImpl implements UserService {
                         + Role.RoleName.USER
                         + " is not exists."));
         User model = userMapper.toModel(user);
+        model.setPassword(passwordEncoder.encode(model.getPassword()));
         model.setRoles(Collections.singleton(defaultRole));
         return userMapper.toResponseDto(userRepository.save(model));
     }
