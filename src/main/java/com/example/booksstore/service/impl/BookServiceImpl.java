@@ -2,6 +2,7 @@ package com.example.booksstore.service.impl;
 
 import com.example.booksstore.dto.BookDto;
 import com.example.booksstore.dto.BookRequestDto;
+import com.example.booksstore.dto.book.BookDtoWithoutCategoryIds;
 import com.example.booksstore.exceptions.EntityNotFoundException;
 import com.example.booksstore.exceptions.IsbnAlreadyExistsException;
 import com.example.booksstore.mappers.BookMapper;
@@ -55,6 +56,13 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
+    @Override
+    public List<BookDtoWithoutCategoryIds> getBooksByCategoryId(Long id, Pageable pageable) {
+        return bookRepository.findAllByCategoryId(id, pageable).stream()
+                .map(bookMapper::toDtoWithoutCategories)
+                .toList();
+    }
+
     private void checkBookAvailability(Long id) {
         if (!bookRepository.existsById(id)) {
             throw new EntityNotFoundException("Can't find book by id " + id);
@@ -72,4 +80,5 @@ public class BookServiceImpl implements BookService {
             throw new IsbnAlreadyExistsException("The isbn: " + isbn + " must be uniq.");
         }
     }
+
 }
