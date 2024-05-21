@@ -9,6 +9,7 @@ import com.example.booksstore.models.Role;
 import com.example.booksstore.models.User;
 import com.example.booksstore.repository.RoleRepository;
 import com.example.booksstore.repository.UserRepository;
+import com.example.booksstore.service.ShoppingCartService;
 import com.example.booksstore.service.UserService;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final ShoppingCartService shoppingCartService;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto user) {
@@ -35,6 +37,8 @@ public class UserServiceImpl implements UserService {
         User model = userMapper.toModel(user);
         model.setPassword(passwordEncoder.encode(model.getPassword()));
         model.setRoles(Collections.singleton(defaultRole));
-        return userMapper.toResponseDto(userRepository.save(model));
+        User createdUser = userRepository.save(model);
+        shoppingCartService.createShoppingCartForUser(model);
+        return userMapper.toResponseDto(createdUser);
     }
 }
