@@ -18,6 +18,8 @@ public interface ShoppingCartMapper {
     @Mapping(target = "userId", source = "user", qualifiedByName = "getUserIdFromUser")
     ShoppingCartResponseDto toDto(ShoppingCart shoppingCart);
 
+    CartItemResponseDto toCartItemResponseDto(CartItem cartItem);
+
     @Named("getCartItemsDtoSet")
     default Set<CartItemResponseDto> getCartItemsDtoSet(Set<CartItem> cartItemSet) {
         return cartItemSet.stream()
@@ -29,6 +31,4 @@ public interface ShoppingCartMapper {
     default Long getUserIdFromUser(User user) {
         return user.getId();
     }
-
-    CartItemResponseDto toCartItemResponseDto(CartItem cartItem);
 }
