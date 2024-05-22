@@ -13,6 +13,7 @@ import com.example.booksstore.repository.BookRepository;
 import com.example.booksstore.repository.CategoryRepository;
 import com.example.booksstore.service.BookService;
 import jakarta.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,11 +32,15 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto save(BookRequestDto book) {
         checkIsbnUniqueness(book.getIsbn());
-        Set<Category> categories = book.getCategoryIds().stream()
-                .map(categoryId -> categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotExistsException("Category with id "
-                        + categoryId + " not exists")))
-                .collect(Collectors.toSet());
+        Set<Category> categories = new HashSet<>(categoryRepository
+                .findAllById(book.getCategoryIds()));
+        if (categories.size() != book.getCategoryIds().size()) {
+            Set<Long> collect = categories.stream()
+                    .map(Category::getId)
+                    .collect(Collectors.toSet());
+            throw new CategoryNotExistsException("Categories with ids "
+                    + book.getCategoryIds().removeAll(collect) + " do not exist");
+        }
         Book model = bookMapper.toModel(book);
         model.setCategories(categories);
         return bookMapper.toDto(bookRepository.save(model));
