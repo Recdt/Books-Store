@@ -53,7 +53,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({RegistrationException.class, IsbnAlreadyExistsException.class})
+    @ExceptionHandler({RegistrationException.class, IsbnAlreadyExistsException.class,
+            NoSuchCategoryException.class})
     public ResponseEntity<Object> handleBadRequestExceptions(Exception exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
