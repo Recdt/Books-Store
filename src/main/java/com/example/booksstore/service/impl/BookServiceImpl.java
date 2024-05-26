@@ -3,13 +3,20 @@ package com.example.booksstore.service.impl;
 import com.example.booksstore.dto.BookDto;
 import com.example.booksstore.dto.BookRequestDto;
 import com.example.booksstore.dto.book.BookDtoWithoutCategoryIds;
+import com.example.booksstore.exceptions.CategoryNotExistsException;
 import com.example.booksstore.exceptions.EntityNotFoundException;
 import com.example.booksstore.exceptions.IsbnAlreadyExistsException;
 import com.example.booksstore.mappers.BookMapper;
 import com.example.booksstore.models.Book;
+import com.example.booksstore.models.Category;
 import com.example.booksstore.repository.BookRepository;
+import com.example.booksstore.repository.CategoryRepository;
 import com.example.booksstore.service.BookService;
+import jakarta.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,14 +26,27 @@ import org.springframework.stereotype.Service;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final CategoryRepository categoryRepository;
 
+    @Transactional
     @Override
     public BookDto save(BookRequestDto book) {
         checkIsbnUniqueness(book.getIsbn());
+        Set<Category> categories = new HashSet<>(categoryRepository
+                .findAllById(book.getCategoryIds()));
+        if (categories.size() != book.getCategoryIds().size()) {
+            Set<Long> collect = categories.stream()
+                    .map(Category::getId)
+                    .collect(Collectors.toSet());
+            throw new CategoryNotExistsException("Categories with ids "
+                    + book.getCategoryIds().removeAll(collect) + " do not exist");
+        }
         Book model = bookMapper.toModel(book);
+        model.setCategories(categories);
         return bookMapper.toDto(bookRepository.save(model));
     }
 
+    @Transactional
     @Override
     public BookDto getById(Long id) {
         Book book = bookRepository.findById(id)
@@ -34,6 +54,7 @@ public class BookServiceImpl implements BookService {
         return bookMapper.toDto(book);
     }
 
+    @Transactional
     @Override
     public List<BookDto> findAll(Pageable pageable) {
         return bookRepository.findAll(pageable).stream()
@@ -80,5 +101,4 @@ public class BookServiceImpl implements BookService {
             throw new IsbnAlreadyExistsException("The isbn: " + isbn + " must be uniq.");
         }
     }
-
 }

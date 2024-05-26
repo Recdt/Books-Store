@@ -12,12 +12,12 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    nullable: false
               - column:
                   name: name
                   type: varchar(255)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: description
                   type: varchar(500)
@@ -25,5 +25,3 @@ databaseChangeLog:
                   name: is_deleted
                   type: boolean
                   defaultValueBoolean: false
-                  constraints:
-                    nullable: false
