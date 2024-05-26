@@ -2,7 +2,6 @@ package com.example.booksstore.controller;
 
 import com.example.booksstore.dto.book.BookDtoWithoutCategoryIds;
 import com.example.booksstore.dto.category.CategoryDto;
-import com.example.booksstore.models.Category;
 import com.example.booksstore.service.BookService;
 import com.example.booksstore.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +41,7 @@ public class CategoryController {
             description = "Get a list of all available categories, "
                     + "that your pagination required")
     @GetMapping
-    public List<Category> getAll(Pageable pageable) {
+    public List<CategoryDto> getAll(Pageable pageable) {
         return categoryService.findAll(pageable);
     }
 
