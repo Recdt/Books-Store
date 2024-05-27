@@ -14,7 +14,6 @@ import com.example.booksstore.repository.ShoppingCartRepository;
 import com.example.booksstore.service.CartItemService;
 import com.example.booksstore.service.ShoppingCartService;
 import jakarta.transaction.Transactional;
-import java.util.HashSet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,14 +26,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemService cartItemService;
 
     @Override
-    public ShoppingCartResponseDto getByUserId(Long id) {
-        return shoppingCartMapper.toDto(getShoppingCart(id));
+    public ShoppingCartResponseDto getByUserId(Long userId) {
+        return shoppingCartMapper.toDto(getShoppingCart(userId));
     }
 
     @Override
     @Transactional
-    public CartItemResponseDto addToCart(CartItemRequestDto requestDto, Long id) {
-        ShoppingCart shoppingCart = getShoppingCart(id);
+    public CartItemResponseDto addToCart(CartItemRequestDto requestDto, Long cartId) {
+        ShoppingCart shoppingCart = getShoppingCart(cartId);
         CartItem cartItem = cartItemService.addToCart(requestDto, shoppingCart);
         shoppingCart.getCartItems().add(cartItem);
 
@@ -46,8 +45,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public CartItemResponseDto updateCart(
             UpdateCartItemRequestDto requestDto,
             Long cartItemId,
-            Long id) {
-        ShoppingCart shoppingCart = getShoppingCart(id);
+            Long cartId) {
+        ShoppingCart shoppingCart = getShoppingCart(cartId);
         CartItem cartItem = cartItemService.update(cartItemId, requestDto);
         shoppingCartRepository.save(shoppingCart);
         return cartItemMapper.toDto(cartItem);
@@ -55,8 +54,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public void deleteCartItem(Long cartItemId, Long id) {
-        ShoppingCart shoppingCart = getShoppingCart(id);
+    public void deleteCartItem(Long cartItemId, Long cartId) {
+        ShoppingCart shoppingCart = getShoppingCart(cartId);
         CartItem cartItem = shoppingCart.getCartItems().stream()
                 .filter(item -> item.getId().equals(cartItemId))
                 .findAny()
@@ -69,7 +68,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void createShoppingCartForUser(User user) {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(user);
-        shoppingCart.setCartItems(new HashSet<>());
         shoppingCartRepository.save(shoppingCart);
     }
 

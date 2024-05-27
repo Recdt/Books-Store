@@ -7,14 +7,14 @@ import com.example.booksstore.dto.shoppingcart.ShoppingCartResponseDto;
 import com.example.booksstore.models.User;
 
 public interface ShoppingCartService {
-    ShoppingCartResponseDto getByUserId(Long id);
+    ShoppingCartResponseDto getByUserId(Long userId);
 
-    CartItemResponseDto addToCart(CartItemRequestDto requestDto, Long id);
+    CartItemResponseDto addToCart(CartItemRequestDto requestDto, Long cartId);
 
     CartItemResponseDto updateCart(UpdateCartItemRequestDto requestDto,
-                                   Long cartItemId, Long id);
+                                   Long cartItemId, Long cartId);
 
-    void deleteCartItem(Long cartItemId, Long id);
+    void deleteCartItem(Long cartItemId, Long cartId);
 
     void createShoppingCartForUser(User user);
 }
