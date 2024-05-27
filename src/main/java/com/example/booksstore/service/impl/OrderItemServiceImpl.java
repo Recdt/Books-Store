@@ -25,7 +25,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public List<OrderItemResponseDto> getAllOrderItemsByOrderId(Long orderId) {
         orderRepository.findById(orderId).orElseThrow(() ->
-                new NoSuchOrderException("Can't find order with id " + orderId));
+                new NoSuchOrderException("Can't find order, it does not belong to you."));
         return orderItemRepository.findByOrderId(orderId).stream()
                 .map(orderItemMapper::toDto)
                 .toList();
@@ -42,7 +42,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     public OrderItemResponseDto getOrderItemById(Long orderId, Long itemId) {
         OrderItem orderItem = orderItemRepository.findByOrderIdAndId(orderId, itemId)
                 .orElseThrow(() -> new NoSuchOrderItemException("Can't find item with id "
-                        + itemId + " in order " + orderId));
+                        + itemId + " in order your order."));
         return orderItemMapper.toDto(orderItem);
     }
 }

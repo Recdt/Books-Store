@@ -3,7 +3,7 @@ package com.example.booksstore.service.impl;
 import com.example.booksstore.dto.BookDto;
 import com.example.booksstore.dto.BookRequestDto;
 import com.example.booksstore.dto.book.BookDtoWithoutCategoryIds;
-import com.example.booksstore.exceptions.CategoryNotExistsException;
+import com.example.booksstore.exceptions.CategoryDoesNotExistsException;
 import com.example.booksstore.exceptions.EntityNotFoundException;
 import com.example.booksstore.exceptions.IsbnAlreadyExistsException;
 import com.example.booksstore.mappers.BookMapper;
@@ -30,19 +30,20 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public BookDto save(BookRequestDto book) {
-        checkIsbnUniqueness(book.getIsbn());
-        Set<Category> categories = new HashSet<>(categoryRepository
-                .findAllById(book.getCategoryIds()));
-        if (categories.size() != book.getCategoryIds().size()) {
-            Set<Long> collect = categories.stream()
+    public BookDto save(BookRequestDto bookRequest) {
+        checkIsbnUniqueness(bookRequest.getIsbn());
+        Set<Category> existentCategories = new HashSet<>(categoryRepository
+                .findAllById(bookRequest.getCategoryIds()));
+        if (existentCategories.size() != bookRequest.getCategoryIds().size()) {
+            Set<Long> existentCategoriesIds = existentCategories.stream()
                     .map(Category::getId)
                     .collect(Collectors.toSet());
-            throw new CategoryNotExistsException("Categories with ids "
-                    + book.getCategoryIds().removeAll(collect) + " do not exist");
+            throw new CategoryDoesNotExistsException("Categories with ids "
+                    + bookRequest.getCategoryIds().removeAll(existentCategoriesIds)
+                    + " do not exist");
         }
-        Book model = bookMapper.toModel(book);
-        model.setCategories(categories);
+        Book model = bookMapper.toModel(bookRequest);
+        model.setCategories(existentCategories);
         return bookMapper.toDto(bookRepository.save(model));
     }
 

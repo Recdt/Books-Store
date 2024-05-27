@@ -43,8 +43,8 @@ public class OrderServiceImpl implements OrderService {
         if (cartItems.isEmpty()) {
             throw new EntityNotFoundException("Can't find cart items for user " + user.getId());
         }
-
-        shoppingCartRepository.deleteById(shoppingCart.getId());
+        shoppingCart.getCartItems().clear();
+        shoppingCartRepository.save(shoppingCart);
         Order order = orderMapper.toModel(requestDto);
         order.setUser(user);
         order.setStatus(Order.Status.COMPLETED);
