@@ -7,12 +7,10 @@ import com.example.booksstore.exceptions.EntityNotFoundException;
 import com.example.booksstore.mappers.OrderMapper;
 import com.example.booksstore.models.CartItem;
 import com.example.booksstore.models.Order;
-import com.example.booksstore.models.OrderItem;
 import com.example.booksstore.models.ShoppingCart;
 import com.example.booksstore.models.User;
 import com.example.booksstore.repository.OrderRepository;
 import com.example.booksstore.repository.ShoppingCartRepository;
-import com.example.booksstore.service.OrderItemService;
 import com.example.booksstore.service.OrderService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
@@ -28,7 +26,6 @@ import org.springframework.stereotype.Service;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ShoppingCartRepository shoppingCartRepository;
-    private final OrderItemService orderItemService;
     private final OrderMapper orderMapper;
 
     @Transactional
@@ -52,7 +49,6 @@ public class OrderServiceImpl implements OrderService {
         order.setTotal(calculateTotal(order));
         Order savedOrder = orderRepository.save(order);
 
-        orderItemService.saveOrderItems(savedOrder.getOrderItems());
         return orderMapper.toDto(savedOrder);
     }
 
@@ -74,10 +70,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private BigDecimal calculateTotal(Order order) {
-        BigDecimal total = BigDecimal.ZERO;
-        for (OrderItem item : order.getOrderItems()) {
-            total = total.add(item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
-        }
-        return total;
+        return order.getOrderItems().stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
