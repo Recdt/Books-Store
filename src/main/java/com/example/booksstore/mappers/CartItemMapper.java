@@ -24,14 +24,4 @@ public interface CartItemMapper {
         book.setId(bookId);
         return book;
     }
-
-    @Named(value = "bookIdByBook")
-    default Long bookIdByBook(Book book) {
-        return book.getId();
-    }
-
-    @Named(value = "getTitleByBook")
-    default String getTitleByBook(Book book) {
-        return book.getTitle();
-    }
 }
