@@ -38,8 +38,9 @@ public class BookServiceImpl implements BookService {
             Set<Long> existentCategoriesIds = existentCategories.stream()
                     .map(Category::getId)
                     .collect(Collectors.toSet());
+            bookRequest.getCategoryIds().removeAll(existentCategoriesIds);
             throw new CategoryDoesNotExistsException("Categories with ids "
-                    + bookRequest.getCategoryIds().removeAll(existentCategoriesIds)
+                    + bookRequest.getCategoryIds()
                     + " do not exist");
         }
         Book model = bookMapper.toModel(bookRequest);
