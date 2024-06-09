@@ -1,7 +1,6 @@
 package com.example.booksstore.service.impl;
 
 import com.example.booksstore.dto.category.CategoryDto;
-import com.example.booksstore.exceptions.EntityNotFoundException;
 import com.example.booksstore.exceptions.NoSuchCategoryException;
 import com.example.booksstore.mappers.CategoryMapper;
 import com.example.booksstore.models.Category;
@@ -54,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private void checkExistanse(Long id) {
         if (!categoryRepository.existsById(id)) {
-            throw new EntityNotFoundException("Can't find category by id " + id);
+            throw new NoSuchCategoryException("Can't find category by id " + id);
         }
     }
 }
