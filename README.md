@@ -57,15 +57,20 @@ This project aims to simulate a real-world online book store and demonstrate the
 
 ## Setup Instructions
 ### Installation without Docker
-1. **Clone the repository**
+1. **Prerequisites**  
+   - Java 21+  
+   - Maven 4+  
+   - MySQL 8+    
+   
+2. **Clone the repository**
     ```bash
     git clone https://github.com/Recdt/Books-Store.git
     cd Books-Store
     ```
-2. **Set up MySQL**  
+3. **Set up MySQL**  
 Establish a new MySQL database, recording its URL, username, and password for future reference.  
 
-3. **Configure environment variables**
+4. **Configure environment variables**
    ```bash
    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
    spring.datasource.url=jdbc:mysql://localhost:3306/your_db_name
@@ -77,12 +82,12 @@ Establish a new MySQL database, recording its URL, username, and password for fu
    jwt.expiration=token_expiration_time
    jwt.secret=your_secret_key
    ```
-4. **Get set up**  
+5. **Get set up**  
 Run the following command to install any required dependencies and build your project:
 ```bash
   mvn clean install
 ```
-5. **Start the server**
+6. **Start the server**
    Once the build is complete, use this command to run your application:
  ```bash
   mvn spring-boot:run
