@@ -126,7 +126,13 @@ mvn test
 ```
 Page Glide ensures the reliability and maintainability of its code by employing Mockito for mocking dependencies and JUnit for unit testing the application logic.
 
+## 📜 Challenges  
+- Database migrations: Implemented using Liquibase for smooth schema updates.  
+- Security: Integrated Spring Security and JWT for robust authentication and authorization.
+- Shopping Cart and Order Processing: Designing a user-friendly shopping cart system that allows users to add, remove, and update items.
 ## ⌨️ Postman collection  
+For testing and interacting with the Java Book Store application's API, I recommend to use Postman with created requests templates.  
+
 [![Run in Postman](https://run.pstmn.io/button.svg)]([https://www.postman.com/collections/your-collection-link](https://www.postman.com/spaceflight-engineer-94981780/workspace/bookapi/collection/34453495-4e04225c-5379-4cde-b44b-e6a5f137f5b3?action=share&creator=34453495))
 ## Functionality
 To access endpoints with required ADMIN role, you can use the next credentials:
